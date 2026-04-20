@@ -5,6 +5,7 @@
 
 import json
 import os
+import pandas as pd
 
 HISTORY_FILE = "history.json"
 
@@ -52,8 +53,15 @@ def clear_history():
 
 
 def export_history_to_csv(history, filename="history_export.csv"):
-    """Экспорт истории в CSV"""
-    import pandas as pd
-    df = pd.DataFrame(history)
+    """Экспорт истории в CSV с правильной кодировкой"""
+    if not history:
+        # Создаем пустой DataFrame с правильными колонками
+        df = pd.DataFrame(columns=['datetime', 'patient_name', 'age', 'gender', 'kpu',
+                                   'parodontit_risk', 'parodontit_percent', 'reflux_risk',
+                                   'reflux_percent', 'fluorine'])
+    else:
+        df = pd.DataFrame(history)
+
+    # Сохраняем с кодировкой UTF-8-BOM (для корректного открытия в Excel)
     df.to_csv(filename, index=False, encoding='utf-8-sig')
     return filename
