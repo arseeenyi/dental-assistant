@@ -126,15 +126,104 @@ if predictor is None:
     st.stop()
 
 # ============================================
+# ФУНКЦИИ ДЛЯ КНОПОК "ПРИМЕР" И "ОЧИСТИТЬ"
+# ============================================
+
+def set_demo_data():
+    """Устанавливает демо-данные в session_state"""
+    st.session_state.demo_age = 55
+    st.session_state.demo_height = 175
+    st.session_state.demo_weight = 85
+    st.session_state.demo_gender = "Мужской"
+    st.session_state.demo_ph_saliva = 5.8
+    st.session_state.demo_ph_water = 6.5
+    st.session_state.demo_ph_tea = 6.0
+    st.session_state.demo_fluorine_water = 1.2
+    st.session_state.demo_fluorine_products = 25.0
+    st.session_state.demo_fluorine_tea = 1.5
+    st.session_state.demo_smoking = "Да"
+    st.session_state.demo_bruxism = "Да"
+    st.session_state.demo_endocrine = "Нет"
+    st.session_state.patient_name = "Тестовый пациент (риск)"
+    st.session_state.demo_mode = True
+
+def clear_form_data():
+    """Очищает все поля формы"""
+    st.session_state.demo_age = 35
+    st.session_state.demo_height = 170
+    st.session_state.demo_weight = 70
+    st.session_state.demo_gender = "Мужской"
+    st.session_state.demo_ph_saliva = 6.8
+    st.session_state.demo_ph_water = 7.0
+    st.session_state.demo_ph_tea = 6.5
+    st.session_state.demo_fluorine_water = 0.5
+    st.session_state.demo_fluorine_products = 10.0
+    st.session_state.demo_fluorine_tea = 0.5
+    st.session_state.demo_smoking = "Нет"
+    st.session_state.demo_bruxism = "Нет"
+    st.session_state.demo_endocrine = "Нет"
+    st.session_state.patient_name = ""
+    st.session_state.demo_mode = False
+
+# ============================================
 # ИНИЦИАЛИЗАЦИЯ SESSION_STATE
 # ============================================
 
 if 'history' not in st.session_state:
-    st.session_state.history = load_history()  # ЗАГРУЖАЕМ ИЗ ФАЙЛА
+    st.session_state.history = load_history()
 if 'current_results' not in st.session_state:
     st.session_state.current_results = None
 if 'patient_name' not in st.session_state:
     st.session_state.patient_name = ""
+if 'demo_mode' not in st.session_state:
+    st.session_state.demo_mode = False
+
+# Инициализация значений полей формы
+if 'demo_age' not in st.session_state:
+    st.session_state.demo_age = 35
+if 'demo_height' not in st.session_state:
+    st.session_state.demo_height = 170
+if 'demo_weight' not in st.session_state:
+    st.session_state.demo_weight = 70
+if 'demo_gender' not in st.session_state:
+    st.session_state.demo_gender = "Мужской"
+if 'demo_ph_saliva' not in st.session_state:
+    st.session_state.demo_ph_saliva = 6.8
+if 'demo_ph_water' not in st.session_state:
+    st.session_state.demo_ph_water = 7.0
+if 'demo_ph_tea' not in st.session_state:
+    st.session_state.demo_ph_tea = 6.5
+if 'demo_fluorine_water' not in st.session_state:
+    st.session_state.demo_fluorine_water = 0.5
+if 'demo_fluorine_products' not in st.session_state:
+    st.session_state.demo_fluorine_products = 10.0
+if 'demo_fluorine_tea' not in st.session_state:
+    st.session_state.demo_fluorine_tea = 0.5
+if 'demo_smoking' not in st.session_state:
+    st.session_state.demo_smoking = "Нет"
+if 'demo_bruxism' not in st.session_state:
+    st.session_state.demo_bruxism = "Нет"
+if 'demo_endocrine' not in st.session_state:
+    st.session_state.demo_endocrine = "Нет"
+
+# ============================================
+# ЧТЕНИЕ ПАРАМЕТРОВ ИЗ URL (для кнопки "Пример")
+# ============================================
+
+params = st.query_params
+
+if "age" in params:
+    st.session_state.demo_age = int(params["age"])
+if "gender" in params:
+    st.session_state.demo_gender = params["gender"]
+if "ph_saliva" in params:
+    st.session_state.demo_ph_saliva = float(params["ph_saliva"])
+if "fluorine_water" in params:
+    st.session_state.demo_fluorine_water = float(params["fluorine_water"])
+if "smoking" in params:
+    st.session_state.demo_smoking = params["smoking"]
+if "bruxism" in params:
+    st.session_state.demo_bruxism = params["bruxism"]
 
 # ============================================
 # ЗАГОЛОВОК
@@ -166,44 +255,134 @@ with st.container():
     with tab1:
         col1, col2, col3 = st.columns(3)
         with col1:
-            age = st.number_input("📅 Возраст (лет)", min_value=0, max_value=120, value=35, step=1)
+            age = st.number_input(
+                "📅 Возраст (лет)",
+                min_value=0, max_value=120,
+                value=st.session_state.demo_age,
+                step=1,
+                key="age_input"
+            )
+            st.session_state.demo_age = age
         with col2:
-            height = st.number_input("📏 Рост (см)", min_value=50, max_value=250, value=170, step=1)
+            height = st.number_input(
+                "📏 Рост (см)",
+                min_value=50, max_value=250,
+                value=st.session_state.demo_height,
+                step=1,
+                key="height_input"
+            )
+            st.session_state.demo_height = height
         with col3:
-            weight = st.number_input("⚖️ Вес (кг)", min_value=10, max_value=300, value=70, step=1)
+            weight = st.number_input(
+                "⚖️ Вес (кг)",
+                min_value=10, max_value=300,
+                value=st.session_state.demo_weight,
+                step=1,
+                key="weight_input"
+            )
+            st.session_state.demo_weight = weight
 
-        gender = st.radio("🚻 Пол", ["Мужской", "Женский"], horizontal=True)
+        gender = st.radio(
+            "🚻 Пол",
+            ["Мужской", "Женский"],
+            horizontal=True,
+            index=0 if st.session_state.demo_gender == "Мужской" else 1,
+            key="gender_radio"
+        )
+        st.session_state.demo_gender = gender
         gender_value = 1 if gender == "Мужской" else 0
 
     with tab2:
         col1, col2, col3 = st.columns(3)
         with col1:
-            ph_saliva = st.slider("💧 pH слюны", 5.0, 8.5, 6.8, 0.05, help="Норма: 6.5-7.5")
+            ph_saliva = st.slider(
+                "💧 pH слюны", 5.0, 8.5,
+                value=st.session_state.demo_ph_saliva,
+                step=0.05,
+                help="Норма: 6.5-7.5",
+                key="ph_saliva_slider"
+            )
+            st.session_state.demo_ph_saliva = ph_saliva
         with col2:
-            ph_water = st.slider("🚰 pH воды", 6.0, 8.5, 7.0, 0.05, help="Норма: 6.5-8.5")
+            ph_water = st.slider(
+                "🚰 pH воды", 6.0, 8.5,
+                value=st.session_state.demo_ph_water,
+                step=0.05,
+                help="Норма: 6.5-8.5",
+                key="ph_water_slider"
+            )
+            st.session_state.demo_ph_water = ph_water
         with col3:
-            ph_tea = st.slider("🍵 pH чая", 5.0, 8.0, 6.5, 0.05, help="Норма: 5.5-7.0")
+            ph_tea = st.slider(
+                "🍵 pH чая", 5.0, 8.0,
+                value=st.session_state.demo_ph_tea,
+                step=0.05,
+                help="Норма: 5.5-7.0",
+                key="ph_tea_slider"
+            )
+            st.session_state.demo_ph_tea = ph_tea
 
     with tab3:
         col1, col2, col3 = st.columns(3)
         with col1:
-            fluorine_water = st.number_input("💧 Фтор в воде (мг/л)", min_value=0.0, max_value=5.0, value=0.5, step=0.1)
+            fluorine_water = st.number_input(
+                "💧 Фтор в воде (мг/л)",
+                min_value=0.0, max_value=5.0,
+                value=st.session_state.demo_fluorine_water,
+                step=0.1,
+                key="fluorine_water_input"
+            )
+            st.session_state.demo_fluorine_water = fluorine_water
         with col2:
-            fluorine_products = st.number_input("🥗 Фтор в продуктах (мг)", min_value=0.0, max_value=100.0, value=10.0,
-                                                step=1.0)
+            fluorine_products = st.number_input(
+                "🥗 Фтор в продуктах (мг)",
+                min_value=0.0, max_value=100.0,
+                value=st.session_state.demo_fluorine_products,
+                step=1.0,
+                key="fluorine_products_input"
+            )
+            st.session_state.demo_fluorine_products = fluorine_products
         with col3:
-            fluorine_tea = st.number_input("🍵 Фтор в чае (мг)", min_value=0.0, max_value=10.0, value=0.5, step=0.1)
+            fluorine_tea = st.number_input(
+                "🍵 Фтор в чае (мг)",
+                min_value=0.0, max_value=10.0,
+                value=st.session_state.demo_fluorine_tea,
+                step=0.1,
+                key="fluorine_tea_input"
+            )
+            st.session_state.demo_fluorine_tea = fluorine_tea
 
     with tab4:
         col1, col2, col3 = st.columns(3)
         with col1:
-            smoking = st.radio("🚬 Курение/алкоголь", ["Нет", "Да"], horizontal=True)
+            smoking = st.radio(
+                "🚬 Курение/алкоголь",
+                ["Нет", "Да"],
+                horizontal=True,
+                index=0 if st.session_state.demo_smoking == "Нет" else 1,
+                key="smoking_radio"
+            )
+            st.session_state.demo_smoking = smoking
             smoking_value = 1 if smoking == "Да" else 0
         with col2:
-            bruxism = st.radio("😬 Бруксизм", ["Нет", "Да"], horizontal=True)
+            bruxism = st.radio(
+                "😬 Бруксизм",
+                ["Нет", "Да"],
+                horizontal=True,
+                index=0 if st.session_state.demo_bruxism == "Нет" else 1,
+                key="bruxism_radio"
+            )
+            st.session_state.demo_bruxism = bruxism
             bruxism_value = 1 if bruxism == "Да" else 0
         with col3:
-            endocrine = st.radio("🦋 Эндокринные нарушения", ["Нет", "Да"], horizontal=True)
+            endocrine = st.radio(
+                "🦋 Эндокринные нарушения",
+                ["Нет", "Да"],
+                horizontal=True,
+                index=0 if st.session_state.demo_endocrine == "Нет" else 1,
+                key="endocrine_radio"
+            )
+            st.session_state.demo_endocrine = endocrine
             endocrine_value = 1 if endocrine == "Да" else 0
 
     # Кнопка прогноза
@@ -393,21 +572,42 @@ if st.session_state.current_results:
         st.rerun()
 
 # ============================================
-# БОКОВАЯ ПАНЕЛЬ
+# БОКОВАЯ ПАНЕЛЬ - ОБНОВЛЕНА
 # ============================================
 
 with st.sidebar:
-    st.markdown("### 🏥 О приложении")
-    st.markdown("""
-    **Стоматологический помощник** использует ML модели.
+    # Быстрые действия
+    st.markdown("### ⚡ Быстрые действия")
 
-    | Показатель | Модель |
-    |------------|--------|
-    | 🦷 КПУ | Gradient Boosting |
-    | 🦷 Пародонтит | Random Forest |
-    | 🔥 Рефлюкс | Gradient Boosting |
-    | 💧 Фтор в моче | Ridge |
-    """)
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button("🎯 Пример", use_container_width=True):
+            st.query_params.update({
+                "age": "55",
+                "gender": "Мужской",
+                "ph_saliva": "5.8",
+                "fluorine_water": "1.2",
+                "smoking": "Да",
+                "bruxism": "Да"
+            })
+            st.rerun()
+    with col2:
+        if st.button("🔄 Очистить", use_container_width=True):
+            st.query_params.clear()
+            st.rerun()
+
+    st.markdown("---")
+    st.markdown("### 📋 Недавние пациенты")
+
+    if len(st.session_state.history) > 0:
+        recent = st.session_state.history[0]
+        st.markdown(f"**Последний:** {recent['patient_name']}")
+        st.caption(f"КПУ: {recent['kpu']:.1f} | {recent['datetime'][:10]}")
+    else:
+        st.caption("Нет истории")
+
+    if st.button("📊 Полная статистика", use_container_width=True):
+        st.switch_page("pages/3_📊_Статистика.py")
 
     st.markdown("---")
     st.markdown("### 📊 Статистика сессии")
