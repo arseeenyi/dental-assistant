@@ -1,11 +1,11 @@
 """
-Генерация PDF отчета для пациента (ИСПРАВЛЕННАЯ ВЕРСИЯ)
+Генерация PDF отчета для пациента (РАБОТАЕТ ВЕЗДЕ)
 """
 
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.lib.units import mm, cm
+from reportlab.lib.units import mm
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
@@ -13,19 +13,16 @@ import os
 from datetime import datetime
 
 
-# Регистрация русских шрифтов
+# Пытаемся зарегистрировать русский шрифт
 def register_russian_fonts():
-    """Регистрация шрифтов с поддержкой кириллицы"""
-    # Пути к шрифтам Windows
     font_paths = [
         "C:/Windows/Fonts/arial.ttf",
         "C:/Windows/Fonts/ariali.ttf",
         "C:/Windows/Fonts/arialbd.ttf",
         "C:/Windows/Fonts/times.ttf",
-        "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf",  # Linux
-        "/System/Library/Fonts/Helvetica.ttc",  # macOS
+        "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf",
+        "/System/Library/Fonts/Helvetica.ttc",
     ]
-
     for path in font_paths:
         if os.path.exists(path):
             try:
@@ -33,28 +30,18 @@ def register_russian_fonts():
                 return 'RussianFont'
             except:
                 continue
-
-    # Если русский шрифт не найден, используем стандартный
-    return 'Helvetica'
+    return None
 
 
+# Определяем, есть ли русский шрифт
 RUSSIAN_FONT = register_russian_fonts()
+USE_RUSSIAN = RUSSIAN_FONT is not None
+
+# Если русского шрифта нет, используем Helvetica
+FONT_NAME = RUSSIAN_FONT if USE_RUSSIAN else 'Helvetica'
 
 
 def generate_pdf_report(results, patient_data, patient_name, filename="dental_report.pdf"):
-    """
-    Генерация PDF отчета
-
-    Args:
-        results: словарь с результатами прогноза
-        patient_data: словарь с данными пациента
-        patient_name: имя пациента
-        filename: имя файла для сохранения
-
-    Returns:
-        str: путь к созданному файлу
-    """
-
     doc = SimpleDocTemplate(
         filename,
         pagesize=A4,
@@ -66,21 +53,21 @@ def generate_pdf_report(results, patient_data, patient_name, filename="dental_re
 
     styles = getSampleStyleSheet()
 
-    # Создаем стили с поддержкой русского языка
+    # Стили
     title_style = ParagraphStyle(
-        'RussianTitle',
+        'CustomTitle',
         parent=styles['Title'],
-        fontName=RUSSIAN_FONT,
+        fontName=FONT_NAME,
         fontSize=16,
         textColor=colors.HexColor('#2c3e50'),
-        alignment=1,  # Центр
+        alignment=1,
         spaceAfter=10
     )
 
     heading_style = ParagraphStyle(
-        'RussianHeading',
+        'CustomHeading',
         parent=styles['Heading2'],
-        fontName=RUSSIAN_FONT,
+        fontName=FONT_NAME,
         fontSize=12,
         textColor=colors.HexColor('#34495e'),
         spaceAfter=8,
@@ -88,14 +75,13 @@ def generate_pdf_report(results, patient_data, patient_name, filename="dental_re
     )
 
     normal_style = ParagraphStyle(
-        'RussianNormal',
+        'CustomNormal',
         parent=styles['Normal'],
-        fontName=RUSSIAN_FONT,
+        fontName=FONT_NAME,
         fontSize=10,
         spaceAfter=6
     )
 
-    # Собираем контент
     story = []
 
     # Заголовок
@@ -103,7 +89,7 @@ def generate_pdf_report(results, patient_data, patient_name, filename="dental_re
     story.append(Paragraph("Dental Health Prediction Report", title_style))
     story.append(Spacer(1, 5 * mm))
 
-    # Дата на русском
+    # Дата
     date_str = datetime.now().strftime("%d.%m.%Y %H:%M")
     story.append(Paragraph(f"Date: {date_str}", normal_style))
     story.append(Spacer(1, 3 * mm))
@@ -111,22 +97,19 @@ def generate_pdf_report(results, patient_data, patient_name, filename="dental_re
     # Информация о пациенте
     story.append(Paragraph("Patient Information", heading_style))
 
-    # Определяем пол на русском
-    gender_text = "Male" if patient_data.get('gender') == "Мужской" else "Female"
-    if patient_data.get('пол') == 1:
-        gender_text = "Male"
-    elif patient_data.get('пол') == 0:
+    gender_text = "Male"
+    if patient_data.get('gender') == "Женский" or patient_data.get('пол') == 0:
         gender_text = "Female"
 
     patient_info = [
-        [f"Name:", f"{patient_name if patient_name else 'Not specified'}"],
-        [f"Age:", f"{patient_data.get('возраст', 'Not specified')} years"],
-        [f"Gender:", f"{gender_text}"],
+        ["Name:", f"{patient_name if patient_name else 'Not specified'}"],
+        ["Age:", f"{patient_data.get('возраст', 'Not specified')} years"],
+        ["Gender:", gender_text],
     ]
 
     patient_table = Table(patient_info, colWidths=[50 * mm, 90 * mm])
     patient_table.setStyle(TableStyle([
-        ('FONTNAME', (0, 0), (-1, -1), RUSSIAN_FONT),
+        ('FONTNAME', (0, 0), (-1, -1), FONT_NAME),
         ('FONTSIZE', (0, 0), (-1, -1), 10),
         ('VALIGN', (0, 0), (-1, -1), 'TOP'),
         ('BOTTOMPADDING', (0, 0), (-1, -1), 4),
@@ -142,43 +125,33 @@ def generate_pdf_report(results, patient_data, patient_name, filename="dental_re
     kpu = results.get('КПУ', 0)
     if kpu < 3:
         kpu_status = "Low caries risk"
-        kpu_color = '#27ae60'
     elif kpu < 7:
         kpu_status = "Medium caries risk"
-        kpu_color = '#f39c12'
     else:
         kpu_status = "High caries risk"
-        kpu_color = '#e74c3c'
 
     # Пародонтит
     paro = results.get('пародонтит', {})
     if paro.get('risk', False):
         paro_status = f"Risk detected ({paro.get('risk_percent', 0):.0f}%)"
-        paro_color = '#e74c3c'
     else:
         paro_status = f"No risk ({100 - paro.get('risk_percent', 0):.0f}%)"
-        paro_color = '#27ae60'
 
     # Рефлюкс
     reflux = results.get('рефлюкс', {})
     if reflux.get('risk', False):
         reflux_status = f"Risk detected ({reflux.get('risk_percent', 0):.0f}%)"
-        reflux_color = '#e74c3c'
     else:
         reflux_status = f"No risk ({100 - reflux.get('risk_percent', 0):.0f}%)"
-        reflux_color = '#27ae60'
 
     # Фтор в моче
     fluorine = results.get('фтор_моча_кг', 0)
     if fluorine < 0.3:
         fluorine_status = f"{fluorine:.2f} mcg/kg (Low)"
-        fluorine_color = '#f39c12'
     elif fluorine < 1.5:
         fluorine_status = f"{fluorine:.2f} mcg/kg (Optimal)"
-        fluorine_color = '#27ae60'
     else:
         fluorine_status = f"{fluorine:.2f} mcg/kg (High)"
-        fluorine_color = '#e74c3c'
 
     results_data = [
         ["Indicator", "Value", "Status"],
@@ -190,7 +163,7 @@ def generate_pdf_report(results, patient_data, patient_name, filename="dental_re
 
     results_table = Table(results_data, colWidths=[50 * mm, 45 * mm, 55 * mm])
     results_table.setStyle(TableStyle([
-        ('FONTNAME', (0, 0), (-1, -1), RUSSIAN_FONT),
+        ('FONTNAME', (0, 0), (-1, -1), FONT_NAME),
         ('FONTSIZE', (0, 0), (-1, -1), 10),
         ('BACKGROUND', (0, 0), (2, 0), colors.HexColor('#34495e')),
         ('TEXTCOLOR', (0, 0), (2, 0), colors.whitesmoke),
@@ -211,17 +184,9 @@ def generate_pdf_report(results, patient_data, patient_name, filename="dental_re
 
     if recommendations:
         for rec in recommendations:
-            # Переводим рекомендации на английский для отчета
-            text = rec['text']
-            # Заменяем русские фразы на английские (упрощенно)
-            text = text.replace("Высокий индекс КПУ", "High DMFT index")
-            text = text.replace("Средний индекс КПУ", "Medium DMFT index")
-            text = text.replace("Низкий индекс КПУ", "Low DMFT index")
-            text = text.replace("Рекомендуется", "Recommended")
-            text = text.replace("риск пародонтита", "periodontitis risk")
-            text = text.replace("риск рефлюкса", "reflux risk")
-            text = text.replace("Низкий уровень фтора", "Low fluorine level")
-            text = text.replace("Повышенный уровень фтора", "High fluorine level")
+            # Если используем русский шрифт, оставляем как есть
+            # Если нет — заменяем русские буквы
+            text = rec['text'] if USE_RUSSIAN else rec['text'].encode('ascii', 'ignore').decode()
             story.append(Paragraph(f"• {text}", normal_style))
     else:
         story.append(Paragraph("• No significant abnormalities detected. Maintain regular oral hygiene.", normal_style))
@@ -237,7 +202,5 @@ def generate_pdf_report(results, patient_data, patient_name, filename="dental_re
                            ParagraphStyle('Footer2', parent=normal_style, fontSize=8,
                                           textColor=colors.HexColor('#95a5a6'))))
 
-    # Создаем PDF
     doc.build(story)
-
     return filename

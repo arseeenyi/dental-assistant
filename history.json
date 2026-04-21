@@ -1,43 +1,7 @@
 [
   {
-    "datetime": "2026-04-20 13:47:21",
-    "patient_name": "Волколупов Алексей",
-    "age": 21,
-    "gender": "Женский",
-    "kpu": 8.37,
-    "parodontit_risk": 0,
-    "parodontit_percent": 41.7,
-    "reflux_risk": 1,
-    "reflux_percent": 66.0,
-    "fluorine": 0.04
-  },
-  {
-    "datetime": "2026-04-20 13:46:45",
-    "patient_name": "Иванченко Зинаида",
-    "age": 35,
-    "gender": "Женский",
-    "kpu": 10.09,
-    "parodontit_risk": 0,
-    "parodontit_percent": 29.8,
-    "reflux_risk": 1,
-    "reflux_percent": 75.6,
-    "fluorine": 0.04
-  },
-  {
-    "datetime": "2026-04-20 13:46:14",
-    "patient_name": "Прохоров Арсений",
-    "age": 35,
-    "gender": "Мужской",
-    "kpu": 10.06,
-    "parodontit_risk": 0,
-    "parodontit_percent": 9.8,
-    "reflux_risk": 0,
-    "reflux_percent": 41.1,
-    "fluorine": 0.04
-  },
-  {
-    "datetime": "2026-04-20 13:37:49",
-    "patient_name": "Иванов Петр",
+    "datetime": "2026-04-21 10:38:44",
+    "patient_name": "Иванов Михаил",
     "age": 35,
     "gender": "Мужской",
     "kpu": 10.06,

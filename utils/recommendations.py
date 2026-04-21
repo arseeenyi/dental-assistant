@@ -1,4 +1,6 @@
-"""Генерация клинических рекомендаций"""
+"""
+Генерация клинических рекомендаций
+"""
 
 
 def generate_recommendations(results):
@@ -6,50 +8,28 @@ def generate_recommendations(results):
 
     kpu = results.get('КПУ', 0)
     if kpu > 10:
-        recommendations.append({
-            'level': 'high',
-            'text': 'Критически высокий индекс КПУ. Срочная санация полости рта, профессиональная гигиена.'
-        })
+        recommendations.append(
+            {'text': 'Critically high DMFT index. Urgent dental care, professional hygiene required.'})
     elif kpu > 7:
-        recommendations.append({
-            'level': 'high',
-            'text': 'Высокий индекс КПУ. Рекомендуется санация, фторсодержащие средства, контроль гигиены.'
-        })
+        recommendations.append(
+            {'text': 'High DMFT index. Dental care, fluoride products, hygiene control recommended.'})
     elif kpu > 3:
-        recommendations.append({
-            'level': 'medium',
-            'text': 'Средний индекс КПУ. Профилактический осмотр каждые 6 месяцев.'
-        })
+        recommendations.append({'text': 'Medium DMFT index. Preventive examination every 6 months.'})
     else:
-        recommendations.append({
-            'level': 'low',
-            'text': 'Низкий индекс КПУ. Профилактический осмотр раз в год.'
-        })
+        recommendations.append({'text': 'Low DMFT index. Preventive examination once a year.'})
 
     paro = results.get('пародонтит', {})
     if paro.get('risk', False):
-        recommendations.append({
-            'level': 'high',
-            'text': 'Риск пародонтита. Рекомендуется профессиональная чистка зубов, обучение гигиене.'
-        })
+        recommendations.append({'text': 'Periodontitis risk detected. Professional teeth cleaning recommended.'})
 
     reflux = results.get('рефлюкс', {})
     if reflux.get('risk', False):
-        recommendations.append({
-            'level': 'medium',
-            'text': 'Риск рефлюкса. Рекомендуется консультация гастроэнтеролога.'
-        })
+        recommendations.append({'text': 'Reflux risk detected. Gastroenterology consultation recommended.'})
 
     fluorine = results.get('фтор_моча_кг', 0)
     if fluorine < 0.3:
-        recommendations.append({
-            'level': 'medium',
-            'text': 'Низкий уровень фтора. Используйте фторсодержащую зубную пасту.'
-        })
+        recommendations.append({'text': 'Low fluorine level. Use fluoride-containing toothpaste.'})
     elif fluorine > 1.5:
-        recommendations.append({
-            'level': 'medium',
-            'text': 'Повышенный уровень фтора. Контролируйте потребление фтора.'
-        })
+        recommendations.append({'text': 'High fluorine level. Monitor fluorine intake.'})
 
     return recommendations
