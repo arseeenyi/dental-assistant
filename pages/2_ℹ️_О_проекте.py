@@ -308,7 +308,7 @@ st.caption("Данные предоставлены стоматологичес
 st.markdown('<div class="section-divider"></div>', unsafe_allow_html=True)
 
 # ============================================
-# КОМАНДА
+# КОМАНДА ПРОЕКТА (ОБНОВЛЕНО)
 # ============================================
 
 st.markdown("### 👨‍🔬 Команда проекта")
@@ -319,8 +319,8 @@ with col1:
     st.markdown("""
     <div class="team-card">
         <div class="team-avatar">👨‍💻</div>
-        <div class="team-name">Автор проекта</div>
-        <div class="team-role">Разработка ML моделей<br>и веб-приложения</div>
+        <div class="team-name">Прохоров Арсений Андреевич</div>
+        <div class="team-role">Автор проекта</div>
     </div>
     """, unsafe_allow_html=True)
 
@@ -328,8 +328,8 @@ with col2:
     st.markdown("""
     <div class="team-card">
         <div class="team-avatar">👨‍🏫</div>
-        <div class="team-name">Научный руководитель</div>
-        <div class="team-role">Кандидат медицинских наук<br>Консультация по клинической части</div>
+        <div class="team-name">Масюк Максим Анатольевич</div>
+        <div class="team-role">Научный руководитель</div>
     </div>
     """, unsafe_allow_html=True)
 
@@ -337,8 +337,8 @@ with col3:
     st.markdown("""
     <div class="team-card">
         <div class="team-avatar">🏥</div>
-        <div class="team-name">Клинический партнер</div>
-        <div class="team-role">Стоматологическая клиника<br>Предоставление данных</div>
+        <div class="team-name">Клиника "Реновацио"</div>
+        <div class="team-role">Клинический партнер</div>
     </div>
     """, unsafe_allow_html=True)
 
@@ -376,6 +376,6 @@ st.markdown("---")
 st.markdown(f"""
 <div style="text-align: center; color: #95a5a6; font-size: 0.8rem; padding: 1rem;">
     <strong>Стоматологический помощник</strong> — версия 1.1<br>
-    Разработано для конференции | {datetime.now().strftime("%Y-%m-%d")}
+    Разработано для ВКР | {datetime.now().strftime("%Y-%m-%d")}
 </div>
 """, unsafe_allow_html=True)
