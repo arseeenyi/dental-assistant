@@ -5,3 +5,4 @@ scikit-learn>=1.2.0
 joblib>=1.2.0
 reportlab>=4.0.0
 plotly>=5.17.0
+cryptography>=47.0.0

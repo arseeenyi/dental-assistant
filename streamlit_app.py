@@ -125,6 +125,7 @@ predictor = load_predictor()
 if predictor is None:
     st.stop()
 
+
 # ============================================
 # ФУНКЦИИ ДЛЯ КНОПОК "ПРИМЕР" И "ОЧИСТИТЬ"
 # ============================================
@@ -147,6 +148,7 @@ def set_demo_data():
     st.session_state.patient_name = "Тестовый пациент (риск)"
     st.session_state.demo_mode = True
 
+
 def clear_form_data():
     """Очищает все поля формы"""
     st.session_state.demo_age = 35
@@ -164,6 +166,7 @@ def clear_form_data():
     st.session_state.demo_endocrine = "Нет"
     st.session_state.patient_name = ""
     st.session_state.demo_mode = False
+
 
 # ============================================
 # ИНИЦИАЛИЗАЦИЯ SESSION_STATE
@@ -576,6 +579,13 @@ if st.session_state.current_results:
 # ============================================
 
 with st.sidebar:
+    # ========== ПРЕДУПРЕЖДЕНИЕ О БЕЗОПАСНОСТИ ==========
+    from utils.security import add_security_notice
+
+    add_security_notice()
+    st.markdown("---")
+    # ========== КОНЕЦ БЛОКА ==========
+
     # Быстрые действия
     st.markdown("### ⚡ Быстрые действия")
 
