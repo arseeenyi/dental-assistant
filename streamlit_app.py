@@ -19,6 +19,7 @@ from utils.formatters import format_kpu, format_risk, format_fluorine, get_kpu_c
 from utils.recommendations import generate_recommendations
 from utils.history_manager import load_history, save_history, add_prediction, clear_history, export_history_to_csv
 from utils.pdf_generator import generate_pdf_report
+from utils.hints import get_tooltip, get_norm_text
 
 # ============================================
 # НАСТРОЙКА СТРАНИЦЫ
@@ -248,7 +249,8 @@ with st.container():
         "👤 Имя пациента (опционально)",
         value=st.session_state.patient_name,
         placeholder="Например: Иванов И.И.",
-        key="patient_name_input"
+        key="patient_name_input",
+        help="Введите ФИО пациента для сохранения в истории"
     )
     st.session_state.patient_name = patient_name
 
@@ -263,37 +265,53 @@ with st.container():
                 min_value=0, max_value=120,
                 value=st.session_state.demo_age,
                 step=1,
-                key="age_input"
+                key="age_input",
+                help=get_tooltip('age')
             )
             st.session_state.demo_age = age
+            norm_text = get_norm_text('age', age)
+            if norm_text:
+                st.caption(norm_text)
         with col2:
             height = st.number_input(
                 "📏 Рост (см)",
                 min_value=50, max_value=250,
                 value=st.session_state.demo_height,
                 step=1,
-                key="height_input"
+                key="height_input",
+                help=get_tooltip('height')
             )
             st.session_state.demo_height = height
+            norm_text = get_norm_text('height', height)
+            if norm_text:
+                st.caption(norm_text)
         with col3:
             weight = st.number_input(
                 "⚖️ Вес (кг)",
                 min_value=10, max_value=300,
                 value=st.session_state.demo_weight,
                 step=1,
-                key="weight_input"
+                key="weight_input",
+                help=get_tooltip('weight')
             )
             st.session_state.demo_weight = weight
+            norm_text = get_norm_text('weight', weight)
+            if norm_text:
+                st.caption(norm_text)
 
         gender = st.radio(
             "🚻 Пол",
             ["Мужской", "Женский"],
             horizontal=True,
             index=0 if st.session_state.demo_gender == "Мужской" else 1,
-            key="gender_radio"
+            key="gender_radio",
+            help=get_tooltip('gender')
         )
         st.session_state.demo_gender = gender
         gender_value = 1 if gender == "Мужской" else 0
+        norm_text = get_norm_text('gender')
+        if norm_text:
+            st.caption(norm_text)
 
     with tab2:
         col1, col2, col3 = st.columns(3)
@@ -302,28 +320,37 @@ with st.container():
                 "💧 pH слюны", 5.0, 8.5,
                 value=st.session_state.demo_ph_saliva,
                 step=0.05,
-                help="Норма: 6.5-7.5",
+                help=get_tooltip('ph_saliva'),
                 key="ph_saliva_slider"
             )
             st.session_state.demo_ph_saliva = ph_saliva
+            norm_text = get_norm_text('ph_saliva', ph_saliva)
+            if norm_text:
+                st.caption(norm_text)
         with col2:
             ph_water = st.slider(
                 "🚰 pH воды", 6.0, 8.5,
                 value=st.session_state.demo_ph_water,
                 step=0.05,
-                help="Норма: 6.5-8.5",
+                help=get_tooltip('ph_water'),
                 key="ph_water_slider"
             )
             st.session_state.demo_ph_water = ph_water
+            norm_text = get_norm_text('ph_water', ph_water)
+            if norm_text:
+                st.caption(norm_text)
         with col3:
             ph_tea = st.slider(
                 "🍵 pH чая", 5.0, 8.0,
                 value=st.session_state.demo_ph_tea,
                 step=0.05,
-                help="Норма: 5.5-7.0",
+                help=get_tooltip('ph_tea'),
                 key="ph_tea_slider"
             )
             st.session_state.demo_ph_tea = ph_tea
+            norm_text = get_norm_text('ph_tea', ph_tea)
+            if norm_text:
+                st.caption(norm_text)
 
     with tab3:
         col1, col2, col3 = st.columns(3)
@@ -333,27 +360,39 @@ with st.container():
                 min_value=0.0, max_value=5.0,
                 value=st.session_state.demo_fluorine_water,
                 step=0.1,
-                key="fluorine_water_input"
+                key="fluorine_water_input",
+                help=get_tooltip('fluorine_water')
             )
             st.session_state.demo_fluorine_water = fluorine_water
+            norm_text = get_norm_text('fluorine_water', fluorine_water)
+            if norm_text:
+                st.caption(norm_text)
         with col2:
             fluorine_products = st.number_input(
                 "🥗 Фтор в продуктах (мг)",
                 min_value=0.0, max_value=100.0,
                 value=st.session_state.demo_fluorine_products,
                 step=1.0,
-                key="fluorine_products_input"
+                key="fluorine_products_input",
+                help=get_tooltip('fluorine_products')
             )
             st.session_state.demo_fluorine_products = fluorine_products
+            norm_text = get_norm_text('fluorine_products', fluorine_products)
+            if norm_text:
+                st.caption(norm_text)
         with col3:
             fluorine_tea = st.number_input(
                 "🍵 Фтор в чае (мг)",
                 min_value=0.0, max_value=10.0,
                 value=st.session_state.demo_fluorine_tea,
                 step=0.1,
-                key="fluorine_tea_input"
+                key="fluorine_tea_input",
+                help=get_tooltip('fluorine_tea')
             )
             st.session_state.demo_fluorine_tea = fluorine_tea
+            norm_text = get_norm_text('fluorine_tea', fluorine_tea)
+            if norm_text:
+                st.caption(norm_text)
 
     with tab4:
         col1, col2, col3 = st.columns(3)
@@ -363,30 +402,42 @@ with st.container():
                 ["Нет", "Да"],
                 horizontal=True,
                 index=0 if st.session_state.demo_smoking == "Нет" else 1,
-                key="smoking_radio"
+                key="smoking_radio",
+                help=get_tooltip('smoking')
             )
             st.session_state.demo_smoking = smoking
             smoking_value = 1 if smoking == "Да" else 0
+            norm_text = get_norm_text('smoking', smoking)
+            if norm_text:
+                st.caption(norm_text)
         with col2:
             bruxism = st.radio(
                 "😬 Бруксизм",
                 ["Нет", "Да"],
                 horizontal=True,
                 index=0 if st.session_state.demo_bruxism == "Нет" else 1,
-                key="bruxism_radio"
+                key="bruxism_radio",
+                help=get_tooltip('bruxism')
             )
             st.session_state.demo_bruxism = bruxism
             bruxism_value = 1 if bruxism == "Да" else 0
+            norm_text = get_norm_text('bruxism', bruxism)
+            if norm_text:
+                st.caption(norm_text)
         with col3:
             endocrine = st.radio(
                 "🦋 Эндокринные нарушения",
                 ["Нет", "Да"],
                 horizontal=True,
                 index=0 if st.session_state.demo_endocrine == "Нет" else 1,
-                key="endocrine_radio"
+                key="endocrine_radio",
+                help=get_tooltip('endocrine')
             )
             st.session_state.demo_endocrine = endocrine
             endocrine_value = 1 if endocrine == "Да" else 0
+            norm_text = get_norm_text('endocrine', endocrine)
+            if norm_text:
+                st.caption(norm_text)
 
     # Кнопка прогноза
     st.markdown("---")
