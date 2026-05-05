@@ -473,6 +473,7 @@ with st.container():
                 try:
                     results = predictor.predict_all(patient_data)
                     st.session_state.current_results = results
+                    st.session_state.last_patient_data = patient_data
 
                     # Сохраняем в историю
                     history_entry = {
