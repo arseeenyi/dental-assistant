@@ -32,7 +32,19 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Кастомные стили
+# Определение типа устройства
+user_agent = st.context.headers.get('User-Agent', '')
+is_mobile = 'Mobile' in user_agent or 'Android' in user_agent or 'iPhone' in user_agent
+is_tablet = 'iPad' in user_agent or 'Tablet' in user_agent
+
+if is_mobile:
+    st.session_state.device_type = 'mobile'
+elif is_tablet:
+    st.session_state.device_type = 'tablet'
+else:
+    st.session_state.device_type = 'desktop'
+
+# Кастомные стили с адаптацией под мобильные
 st.markdown("""
 <style>
     .main-header {
@@ -101,6 +113,83 @@ st.markdown("""
     .confidence-high {
         color: #27ae60;
         font-size: 0.8rem;
+    }
+
+    /* ============================================ */
+    /* АДАПТАЦИЯ ПОД МОБИЛЬНЫЕ УСТРОЙСТВА           */
+    /* ============================================ */
+
+    /* Мобильные устройства (ширина < 768px) */
+    @media only screen and (max-width: 768px) {
+        .main-header {
+            font-size: 1.5rem !important;
+        }
+        .sub-header {
+            font-size: 0.8rem !important;
+        }
+
+        .stButton button {
+            font-size: 16px !important;
+            padding: 12px 20px !important;
+            min-height: 48px !important;
+            width: 100% !important;
+        }
+
+        .stNumberInput input, .stTextInput input {
+            font-size: 16px !important;
+            padding: 12px !important;
+            min-height: 44px !important;
+        }
+
+        .stSlider {
+            padding: 15px 0 !important;
+        }
+
+        .stRadio label {
+            font-size: 16px !important;
+            padding: 8px 12px !important;
+        }
+
+        .metric-card {
+            margin-bottom: 15px !important;
+            min-height: auto !important;
+        }
+
+        .stTabs [data-baseweb="tab-list"] {
+            gap: 4px !important;
+            flex-wrap: wrap !important;
+        }
+        .stTabs [data-baseweb="tab"] {
+            font-size: 12px !important;
+            padding: 8px 12px !important;
+            white-space: nowrap !important;
+        }
+
+        .stPlotlyChart {
+            height: 350px !important;
+        }
+
+        .block-container {
+            padding: 1rem !important;
+        }
+
+        .stDataFrame {
+            overflow-x: auto !important;
+        }
+    }
+
+    /* Планшеты (768px - 1024px) */
+    @media only screen and (min-width: 768px) and (max-width: 1024px) {
+        .main-header {
+            font-size: 1.8rem !important;
+        }
+        .stButton button {
+            font-size: 15px !important;
+            padding: 10px 16px !important;
+        }
+        .metric-card {
+            margin-bottom: 10px !important;
+        }
     }
 </style>
 """, unsafe_allow_html=True)
@@ -497,7 +586,7 @@ with st.container():
                     st.error(f"❌ Ошибка при прогнозе: {e}")
 
 # ============================================
-# НИЖНЯЯ ЧАСТЬ - РЕЗУЛЬТАТЫ
+# НИЖНЯЯ ЧАСТЬ - РЕЗУЛЬТАТЫ (АДАПТИВНЫЕ)
 # ============================================
 
 if st.session_state.current_results:
@@ -505,83 +594,122 @@ if st.session_state.current_results:
 
     st.markdown('<div class="results-header">📊 Результаты прогноза</div>', unsafe_allow_html=True)
 
-    # Три карточки в ряд (одинаковой высоты)
-    col1, col2, col3 = st.columns(3)
+    # Подготавливаем данные для карточек (общие для всех устройств)
+    kpu = results['КПУ']
+    kpu_color = get_kpu_color(kpu)
 
-    with col1:
-        kpu = results['КПУ']
-        kpu_color = get_kpu_color(kpu)
+    paro = results['пародонтит']
+    risk_class_paro = "risk-high" if paro['risk'] else "risk-low"
+    risk_text_paro = "Есть риск" if paro['risk'] else "Нет риска"
+    confidence_paro = paro['risk_percent'] if paro['risk'] else 100 - paro['risk_percent']
+    if confidence_paro > 85:
+        conf_class_paro = "confidence-high"
+        conf_text_paro = "высокая уверенность"
+    elif confidence_paro > 65:
+        conf_class_paro = "confidence-medium"
+        conf_text_paro = "средняя уверенность"
+    else:
+        conf_class_paro = "confidence-low"
+        conf_text_paro = "низкая уверенность"
 
+    reflux = results['рефлюкс']
+    risk_class_reflux = "risk-high" if reflux['risk'] else "risk-low"
+    risk_text_reflux = "Есть риск" if reflux['risk'] else "Нет риска"
+    confidence_reflux = reflux['risk_percent'] if reflux['risk'] else 100 - reflux['risk_percent']
+    if confidence_reflux > 85:
+        conf_class_reflux = "confidence-high"
+        conf_text_reflux = "высокая уверенность"
+    elif confidence_reflux > 65:
+        conf_class_reflux = "confidence-medium"
+        conf_text_reflux = "средняя уверенность"
+    else:
+        conf_class_reflux = "confidence-low"
+        conf_text_reflux = "низкая уверенность"
+
+    fluorine = results['фтор_моча_кг']
+    fluorine_color = get_fluorine_color(fluorine)
+
+    # Адаптивное расположение в зависимости от типа устройства
+    device_type = st.session_state.get('device_type', 'desktop')
+
+    if device_type == 'mobile':
+        # На телефоне — карточки вертикально
         st.markdown(f"""
-                <div class="metric-card">
-                    <h3 style="margin: 0;">🦷 КПУ</h3>
-                    <div class="metric-value" style="color: {kpu_color}">{kpu:.1f}</div>
-                    <p style="margin: 0;"><strong>{format_kpu(kpu)}</strong></p>
-                    <div style="height: 1.2rem;"></div>
-                </div>
-                """, unsafe_allow_html=True)
-
-    with col2:
-        paro = results['пародонтит']
-        risk_class = "risk-high" if paro['risk'] else "risk-low"
-        risk_text = "Есть риск" if paro['risk'] else "Нет риска"
-
-        # Определяем уровень уверенности для отображения
-        confidence = paro['risk_percent'] if paro['risk'] else 100 - paro['risk_percent']
-        if confidence > 85:
-            conf_class = "confidence-high"
-            conf_text = "высокая уверенность"
-        elif confidence > 65:
-            conf_class = "confidence-medium"
-            conf_text = "средняя уверенность"
-        else:
-            conf_class = "confidence-low"
-            conf_text = "низкая уверенность"
+        <div class="metric-card">
+            <h3 style="margin: 0;">🦷 КПУ</h3>
+            <div class="metric-value" style="color: {kpu_color}">{kpu:.1f}</div>
+            <p style="margin: 0;"><strong>{format_kpu(kpu)}</strong></p>
+            <div style="height: 0.5rem;"></div>
+        </div>
+        """, unsafe_allow_html=True)
 
         st.markdown(f"""
         <div class="metric-card">
             <h3 style="margin: 0;">🦷 Пародонтит</h3>
-            <div class="metric-value {risk_class}">{risk_text}</div>
-            <p style="margin: 0;">Уверенность модели: {confidence:.0f}%</p>
-            <p class="{conf_class}" style="margin: 0;">({conf_text})</p>
+            <div class="metric-value {risk_class_paro}">{risk_text_paro}</div>
+            <p style="margin: 0;">Уверенность модели: {confidence_paro:.0f}%</p>
+            <p class="{conf_class_paro}" style="margin: 0;">({conf_text_paro})</p>
         </div>
         """, unsafe_allow_html=True)
-
-    with col3:
-        reflux = results['рефлюкс']
-        risk_class = "risk-high" if reflux['risk'] else "risk-low"
-        risk_text = "Есть риск" if reflux['risk'] else "Нет риска"
-
-        confidence = reflux['risk_percent'] if reflux['risk'] else 100 - reflux['risk_percent']
-        if confidence > 85:
-            conf_class = "confidence-high"
-            conf_text = "высокая уверенность"
-        elif confidence > 65:
-            conf_class = "confidence-medium"
-            conf_text = "средняя уверенность"
-        else:
-            conf_class = "confidence-low"
-            conf_text = "низкая уверенность"
 
         st.markdown(f"""
         <div class="metric-card">
             <h3 style="margin: 0;">🔥 Рефлюкс</h3>
-            <div class="metric-value {risk_class}">{risk_text}</div>
-            <p style="margin: 0;">Уверенность модели: {confidence:.0f}%</p>
-            <p class="{conf_class}" style="margin: 0;">({conf_text})</p>
+            <div class="metric-value {risk_class_reflux}">{risk_text_reflux}</div>
+            <p style="margin: 0;">Уверенность модели: {confidence_reflux:.0f}%</p>
+            <p class="{conf_class_reflux}" style="margin: 0;">({conf_text_reflux})</p>
         </div>
         """, unsafe_allow_html=True)
 
-    # Фтор в моче (отдельная карточка во всю ширину)
-    fluorine = results['фтор_моча_кг']
-    fluorine_color = get_fluorine_color(fluorine)
-    st.markdown(f"""
-    <div class="metric-card" style="margin-top: 1rem;">
-        <h3 style="margin: 0;">💧 Фтор в моче</h3>
-        <div class="metric-value" style="color: {fluorine_color}">{fluorine:.2f} мкг/кг</div>
-        <p style="margin: 0;">{format_fluorine(fluorine)}</p>
-    </div>
-    """, unsafe_allow_html=True)
+        st.markdown(f"""
+        <div class="metric-card" style="margin-top: 1rem;">
+            <h3 style="margin: 0;">💧 Фтор в моче</h3>
+            <div class="metric-value" style="color: {fluorine_color}">{fluorine:.2f} мкг/кг</div>
+            <p style="margin: 0;">{format_fluorine(fluorine)}</p>
+        </div>
+        """, unsafe_allow_html=True)
+    else:
+        # На планшете/ПК — карточки горизонтально
+        col1, col2, col3 = st.columns(3)
+
+        with col1:
+            st.markdown(f"""
+            <div class="metric-card">
+                <h3 style="margin: 0;">🦷 КПУ</h3>
+                <div class="metric-value" style="color: {kpu_color}">{kpu:.1f}</div>
+                <p style="margin: 0;"><strong>{format_kpu(kpu)}</strong></p>
+                <div style="height: 1.2rem;"></div>
+            </div>
+            """, unsafe_allow_html=True)
+
+        with col2:
+            st.markdown(f"""
+            <div class="metric-card">
+                <h3 style="margin: 0;">🦷 Пародонтит</h3>
+                <div class="metric-value {risk_class_paro}">{risk_text_paro}</div>
+                <p style="margin: 0;">Уверенность модели: {confidence_paro:.0f}%</p>
+                <p class="{conf_class_paro}" style="margin: 0;">({conf_text_paro})</p>
+            </div>
+            """, unsafe_allow_html=True)
+
+        with col3:
+            st.markdown(f"""
+            <div class="metric-card">
+                <h3 style="margin: 0;">🔥 Рефлюкс</h3>
+                <div class="metric-value {risk_class_reflux}">{risk_text_reflux}</div>
+                <p style="margin: 0;">Уверенность модели: {confidence_reflux:.0f}%</p>
+                <p class="{conf_class_reflux}" style="margin: 0;">({conf_text_reflux})</p>
+            </div>
+            """, unsafe_allow_html=True)
+
+        # Фтор в моче (отдельная карточка во всю ширину)
+        st.markdown(f"""
+        <div class="metric-card" style="margin-top: 1rem;">
+            <h3 style="margin: 0;">💧 Фтор в моче</h3>
+            <div class="metric-value" style="color: {fluorine_color}">{fluorine:.2f} мкг/кг</div>
+            <p style="margin: 0;">{format_fluorine(fluorine)}</p>
+        </div>
+        """, unsafe_allow_html=True)
 
     # Рекомендации
     st.markdown('<div class="results-header">💡 Клинические рекомендации</div>', unsafe_allow_html=True)
