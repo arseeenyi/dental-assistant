@@ -21,6 +21,26 @@ from utils.history_manager import load_history, save_history, add_prediction, cl
 from utils.pdf_generator import generate_pdf_report
 from utils.hints import get_tooltip, get_norm_text
 
+
+# ============================================
+# ФУНКЦИЯ ПЛАВНОЙ ПРОКРУТКИ
+# ============================================
+
+def scroll_to_results():
+    """JavaScript для плавной прокрутки к результатам"""
+    st.markdown("""
+    <script>
+        function scrollToResults() {
+            const results = document.querySelector('.results-header');
+            if (results) {
+                results.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+        setTimeout(scrollToResults, 100);
+    </script>
+    """, unsafe_allow_html=True)
+
+
 # ============================================
 # НАСТРОЙКА СТРАНИЦЫ
 # ============================================
@@ -44,13 +64,30 @@ elif is_tablet:
 else:
     st.session_state.device_type = 'desktop'
 
-# Кастомные стили с адаптацией под мобильные
+# Кастомные стили с улучшениями дизайна
 st.markdown("""
 <style>
+    /* ============================================ */
+    /* ПОЛЬЗОВАТЕЛЬСКИЕ ШРИФТЫ                     */
+    /* ============================================ */
+
+    @import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,100..900;1,100..900&display=swap');
+
+    html, body, .stApp, .stMarkdown, .stButton, .stTextInput, .stNumberInput {
+        font-family: 'Inter', sans-serif;
+    }
+
+    /* ============================================ */
+    /* ГРАДИЕНТНЫЙ ФОН ДЛЯ ЗАГОЛОВКА               */
+    /* ============================================ */
+
     .main-header {
         font-size: 2rem;
         font-weight: bold;
-        color: #2c3e50;
+        background: linear-gradient(135deg, #1a5276, #e74c3c);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
         text-align: center;
         margin-bottom: 0.25rem;
     }
@@ -60,23 +97,120 @@ st.markdown("""
         text-align: center;
         margin-bottom: 1.5rem;
     }
+
+    /* ============================================ */
+    /* GLASS-MORPHISM ЭФФЕКТ ДЛЯ КАРТОЧЕК          */
+    /* ============================================ */
+
     .metric-card {
-        background-color: #f8f9fa;
-        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 16px;
         padding: 1rem;
         text-align: center;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         height: 100%;
-        min-height: 180px;
+        min-height: 220px;
         display: flex;
         flex-direction: column;
         justify-content: center;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        transition: all 0.3s ease;
     }
+
+    .metric-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+        background: rgba(255, 255, 255, 1);
+    }
+
+    /* ============================================ */
+    /* ИКОНКИ В КАРТОЧКАХ                          */
+    /* ============================================ */
+
+    .card-icon {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+    }
+
     .metric-value {
         font-size: 2rem;
         font-weight: bold;
         margin: 0.2rem 0;
     }
+
+    /* ============================================ */
+    /* ПЛАВАЮЩАЯ ПАНЕЛЬ НАВИГАЦИИ (STICKY SIDEBAR) */
+    /* ============================================ */
+
+    .css-1d391kg {
+        position: sticky !important;
+        top: 0 !important;
+        z-index: 999 !important;
+    }
+
+    section[data-testid="stSidebar"] {
+        position: sticky !important;
+        top: 0 !important;
+        height: 100vh !important;
+    }
+
+    /* ============================================ */
+    /* АНИМАЦИЯ ПОЯВЛЕНИЯ РЕЗУЛЬТАТОВ (FADE-IN)    */
+    /* ============================================ */
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .metric-card {
+        animation: fadeInUp 0.5s ease-out;
+    }
+
+    /* ============================================ */
+    /* ПУЛЬСИРУЮЩАЯ АНИМАЦИЯ ДЛЯ КНОПКИ            */
+    /* ============================================ */
+
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.02); }
+        100% { transform: scale(1); }
+    }
+
+    .stButton button[kind="primary"] {
+        animation: pulse 2s infinite;
+    }
+
+    /* ============================================ */
+    /* ГРАДИЕНТНЫЕ КНОПКИ                           */
+    /* ============================================ */
+
+    .stButton button {
+        background: linear-gradient(135deg, #e74c3c, #e67e22) !important;
+        border: none !important;
+        font-weight: bold !important;
+        color: white !important;
+        border-radius: 25px !important;
+        padding: 8px 24px !important;
+        transition: all 0.3s ease !important;
+    }
+
+    .stButton button:hover {
+        background: linear-gradient(135deg, #c0392b, #d35400) !important;
+        transform: scale(1.02);
+    }
+
+    /* ============================================ */
+    /* ОСТАЛЬНЫЕ СТИЛИ                              */
+    /* ============================================ */
+
     .risk-high {
         color: #e74c3c;
         font-weight: bold;
@@ -116,10 +250,46 @@ st.markdown("""
     }
 
     /* ============================================ */
+    /* ПРОГРЕСС-БАРЫ                               */
+    /* ============================================ */
+
+    .progress-bar-container {
+        background-color: #ecf0f1;
+        border-radius: 10px;
+        height: 10px;
+        margin: 8px 0;
+        overflow: hidden;
+    }
+
+    .progress-bar {
+        border-radius: 10px;
+        height: 100%;
+        transition: width 0.5s ease;
+    }
+
+    .progress-bar-green {
+        background: linear-gradient(90deg, #27ae60, #2ecc71);
+    }
+
+    .progress-bar-yellow {
+        background: linear-gradient(90deg, #f39c12, #f1c40f);
+    }
+
+    .progress-bar-red {
+        background: linear-gradient(90deg, #e74c3c, #c0392b);
+    }
+
+    .progress-label {
+        font-size: 0.75rem;
+        color: #7f8c8d;
+        margin-top: 4px;
+        text-align: center;
+    }
+
+    /* ============================================ */
     /* АДАПТАЦИЯ ПОД МОБИЛЬНЫЕ УСТРОЙСТВА           */
     /* ============================================ */
 
-    /* Мобильные устройства (ширина < 768px) */
     @media only screen and (max-width: 768px) {
         .main-header {
             font-size: 1.5rem !important;
@@ -172,13 +342,8 @@ st.markdown("""
         .block-container {
             padding: 1rem !important;
         }
-
-        .stDataFrame {
-            overflow-x: auto !important;
-        }
     }
 
-    /* Планшеты (768px - 1024px) */
     @media only screen and (min-width: 768px) and (max-width: 1024px) {
         .main-header {
             font-size: 1.8rem !important;
@@ -196,18 +361,14 @@ st.markdown("""
 
 
 # ============================================
-# ЗАГРУЗКА МОДЕЛЕЙ
+# ЗАГРУЗКА МОДЕЛЕЙ (Скелетон-загрузка)
 # ============================================
 
 @st.cache_resource
 def load_predictor():
-    try:
-        with st.spinner("🔄 Загрузка моделей..."):
-            predictor = DentalPredictor()
-        return predictor
-    except Exception as e:
-        st.error(f"❌ Ошибка загрузки моделей: {e}")
-        return None
+    with st.spinner("🔄 Загрузка моделей..."):
+        predictor = DentalPredictor()
+    return predictor
 
 
 predictor = load_predictor()
@@ -581,12 +742,13 @@ with st.container():
                     st.session_state.history = add_prediction(st.session_state.history, history_entry)
 
                     st.success("✅ Прогноз выполнен успешно!")
+                    scroll_to_results()
                     st.rerun()
                 except Exception as e:
                     st.error(f"❌ Ошибка при прогнозе: {e}")
 
 # ============================================
-# НИЖНЯЯ ЧАСТЬ - РЕЗУЛЬТАТЫ (АДАПТИВНЫЕ)
+# НИЖНЯЯ ЧАСТЬ - РЕЗУЛЬТАТЫ (АДАПТИВНЫЕ С ПРОГРЕСС-БАРАМИ)
 # ============================================
 
 if st.session_state.current_results:
@@ -597,6 +759,18 @@ if st.session_state.current_results:
     # Подготавливаем данные для карточек (общие для всех устройств)
     kpu = results['КПУ']
     kpu_color = get_kpu_color(kpu)
+
+    # Прогресс-бар для КПУ (максимум 15)
+    kpu_percent = min(kpu / 15, 1.0)
+    if kpu < 3:
+        kpu_bar_class = "progress-bar-green"
+        kpu_status_text = "Низкий риск кариеса"
+    elif kpu < 7:
+        kpu_bar_class = "progress-bar-yellow"
+        kpu_status_text = "Средний риск кариеса"
+    else:
+        kpu_bar_class = "progress-bar-red"
+        kpu_status_text = "Высокий риск кариеса"
 
     paro = results['пародонтит']
     risk_class_paro = "risk-high" if paro['risk'] else "risk-low"
@@ -629,6 +803,20 @@ if st.session_state.current_results:
     fluorine = results['фтор_моча_кг']
     fluorine_color = get_fluorine_color(fluorine)
 
+    # Прогресс-бар для фтора (норма 0.3-1.5)
+    if fluorine < 0.3:
+        fluorine_percent = fluorine / 0.3
+        fluorine_bar_class = "progress-bar-yellow"
+        fluorine_status_text = "Низкий уровень фтора"
+    elif fluorine < 1.5:
+        fluorine_percent = (fluorine - 0.3) / 1.2
+        fluorine_bar_class = "progress-bar-green"
+        fluorine_status_text = "Оптимальный уровень фтора"
+    else:
+        fluorine_percent = min((fluorine - 1.5) / 3.5, 1.0)
+        fluorine_bar_class = "progress-bar-red"
+        fluorine_status_text = "Высокий уровень фтора"
+
     # Адаптивное расположение в зависимости от типа устройства
     device_type = st.session_state.get('device_type', 'desktop')
 
@@ -636,36 +824,45 @@ if st.session_state.current_results:
         # На телефоне — карточки вертикально
         st.markdown(f"""
         <div class="metric-card">
-            <h3 style="margin: 0;">🦷 КПУ</h3>
+            <div class="card-icon">🦷</div>
+            <h3 style="margin: 0;">КПУ</h3>
             <div class="metric-value" style="color: {kpu_color}">{kpu:.1f}</div>
-            <p style="margin: 0;"><strong>{format_kpu(kpu)}</strong></p>
-            <div style="height: 0.5rem;"></div>
+            <div class="progress-bar-container">
+                <div class="progress-bar {kpu_bar_class}" style="width: {kpu_percent * 100}%;"></div>
+            </div>
+            <div class="progress-label">{kpu_status_text}</div>
         </div>
         """, unsafe_allow_html=True)
 
         st.markdown(f"""
         <div class="metric-card">
-            <h3 style="margin: 0;">🦷 Пародонтит</h3>
+            <div class="card-icon">🦷</div>
+            <h3 style="margin: 0;">Пародонтит</h3>
             <div class="metric-value {risk_class_paro}">{risk_text_paro}</div>
-            <p style="margin: 0;">Уверенность модели: {confidence_paro:.0f}%</p>
+            <p style="margin: 5px 0 0 0;">Уверенность модели: {confidence_paro:.0f}%</p>
             <p class="{conf_class_paro}" style="margin: 0;">({conf_text_paro})</p>
         </div>
         """, unsafe_allow_html=True)
 
         st.markdown(f"""
         <div class="metric-card">
-            <h3 style="margin: 0;">🔥 Рефлюкс</h3>
+            <div class="card-icon">🔥</div>
+            <h3 style="margin: 0;">Рефлюкс</h3>
             <div class="metric-value {risk_class_reflux}">{risk_text_reflux}</div>
-            <p style="margin: 0;">Уверенность модели: {confidence_reflux:.0f}%</p>
+            <p style="margin: 5px 0 0 0;">Уверенность модели: {confidence_reflux:.0f}%</p>
             <p class="{conf_class_reflux}" style="margin: 0;">({conf_text_reflux})</p>
         </div>
         """, unsafe_allow_html=True)
 
         st.markdown(f"""
         <div class="metric-card" style="margin-top: 1rem;">
-            <h3 style="margin: 0;">💧 Фтор в моче</h3>
+            <div class="card-icon">💧</div>
+            <h3 style="margin: 0;">Фтор в моче</h3>
             <div class="metric-value" style="color: {fluorine_color}">{fluorine:.2f} мкг/кг</div>
-            <p style="margin: 0;">{format_fluorine(fluorine)}</p>
+            <div class="progress-bar-container">
+                <div class="progress-bar {fluorine_bar_class}" style="width: {fluorine_percent * 100}%;"></div>
+            </div>
+            <div class="progress-label">{fluorine_status_text}</div>
         </div>
         """, unsafe_allow_html=True)
     else:
@@ -675,19 +872,23 @@ if st.session_state.current_results:
         with col1:
             st.markdown(f"""
             <div class="metric-card">
-                <h3 style="margin: 0;">🦷 КПУ</h3>
+                <div class="card-icon">🦷</div>
+                <h3 style="margin: 0;">КПУ</h3>
                 <div class="metric-value" style="color: {kpu_color}">{kpu:.1f}</div>
-                <p style="margin: 0;"><strong>{format_kpu(kpu)}</strong></p>
-                <div style="height: 1.2rem;"></div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar {kpu_bar_class}" style="width: {kpu_percent * 100}%;"></div>
+                </div>
+                <div class="progress-label">{kpu_status_text}</div>
             </div>
             """, unsafe_allow_html=True)
 
         with col2:
             st.markdown(f"""
             <div class="metric-card">
-                <h3 style="margin: 0;">🦷 Пародонтит</h3>
+                <div class="card-icon">🦷</div>
+                <h3 style="margin: 0;">Пародонтит</h3>
                 <div class="metric-value {risk_class_paro}">{risk_text_paro}</div>
-                <p style="margin: 0;">Уверенность модели: {confidence_paro:.0f}%</p>
+                <p style="margin: 5px 0 0 0;">Уверенность модели: {confidence_paro:.0f}%</p>
                 <p class="{conf_class_paro}" style="margin: 0;">({conf_text_paro})</p>
             </div>
             """, unsafe_allow_html=True)
@@ -695,9 +896,10 @@ if st.session_state.current_results:
         with col3:
             st.markdown(f"""
             <div class="metric-card">
-                <h3 style="margin: 0;">🔥 Рефлюкс</h3>
+                <div class="card-icon">🔥</div>
+                <h3 style="margin: 0;">Рефлюкс</h3>
                 <div class="metric-value {risk_class_reflux}">{risk_text_reflux}</div>
-                <p style="margin: 0;">Уверенность модели: {confidence_reflux:.0f}%</p>
+                <p style="margin: 5px 0 0 0;">Уверенность модели: {confidence_reflux:.0f}%</p>
                 <p class="{conf_class_reflux}" style="margin: 0;">({conf_text_reflux})</p>
             </div>
             """, unsafe_allow_html=True)
@@ -705,9 +907,13 @@ if st.session_state.current_results:
         # Фтор в моче (отдельная карточка во всю ширину)
         st.markdown(f"""
         <div class="metric-card" style="margin-top: 1rem;">
-            <h3 style="margin: 0;">💧 Фтор в моче</h3>
+            <div class="card-icon">💧</div>
+            <h3 style="margin: 0;">Фтор в моче</h3>
             <div class="metric-value" style="color: {fluorine_color}">{fluorine:.2f} мкг/кг</div>
-            <p style="margin: 0;">{format_fluorine(fluorine)}</p>
+            <div class="progress-bar-container">
+                <div class="progress-bar {fluorine_bar_class}" style="width: {fluorine_percent * 100}%;"></div>
+            </div>
+            <div class="progress-label">{fluorine_status_text}</div>
         </div>
         """, unsafe_allow_html=True)
 
@@ -799,10 +1005,8 @@ with st.sidebar:
     if st.button("📊 Полная статистика", use_container_width=True):
         st.switch_page("pages/3_📊_Статистика.py")
 
-    # ========== ДОБАВЛЕННАЯ КНОПКА ==========
     if st.button("📊 Корреляционная матрица", use_container_width=True):
         st.switch_page("pages/5_📊_Корреляционная_матрица.py")
-    # ========== КОНЕЦ ДОБАВЛЕННОЙ КНОПКИ ==========
 
     st.markdown("---")
     st.markdown("### 📊 Статистика сессии")
@@ -820,13 +1024,11 @@ with st.sidebar:
     st.markdown("---")
     st.markdown("### 🗑️ Управление историей")
 
-    # Кнопка очистки истории
     if st.button("🗑️ Очистить всю историю", use_container_width=True):
         st.session_state.history = clear_history()
         st.success("✅ История очищена!")
         st.rerun()
 
-    # Кнопка экспорта в CSV
     if len(st.session_state.history) > 0:
         if st.button("📥 Экспорт в CSV", use_container_width=True):
             filename = export_history_to_csv(st.session_state.history)
