@@ -1008,6 +1008,9 @@ with st.sidebar:
     if st.button("📊 Корреляционная матрица", use_container_width=True):
         st.switch_page("pages/5_📊_Корреляционная_матрица.py")
 
+    if st.button("🔍 Поиск по истории", use_container_width=True):
+        st.switch_page("pages/7_🔍_Поиск_по_истории.py")
+
     st.markdown("---")
     st.markdown("### 📊 Статистика сессии")
 
