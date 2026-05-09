@@ -21,6 +21,7 @@ from utils.history_manager import load_history, save_history, add_prediction, cl
 from utils.pdf_generator import generate_pdf_report
 from utils.hints import get_tooltip, get_norm_text
 from utils.auth import is_authenticated, get_current_user, logout, require_auth
+from utils.audit import log_action
 
 
 # ============================================
@@ -730,6 +731,12 @@ with st.container():
                     st.session_state.current_results = results
                     st.session_state.last_patient_data = patient_data
 
+                    # Логируем прогноз
+                    log_action("predict", f"Пациент: {patient_name}, КПУ: {results['КПУ']}, "
+                              f"Пародонтит: {'Есть риск' if results['пародонтит']['risk'] else 'Нет'}, "
+                              f"Рефлюкс: {'Есть риск' if results['рефлюкс']['risk'] else 'Нет'}, "
+                              f"Фтор: {results['фтор_моча_кг']}")
+
                     # Сохраняем в историю
                     history_entry = {
                         'datetime': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
@@ -941,6 +948,8 @@ if st.session_state.current_results:
             'пол': gender,
         }
         if st.button("📄 Скачать PDF отчет для пациента", use_container_width=True):
+            # Логируем скачивание PDF
+            log_action("download_pdf", f"Пациент: {patient_name}")
             with st.spinner("Генерация PDF..."):
                 filename = f"dental_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
                 pdf_path = generate_pdf_report(
@@ -1033,6 +1042,10 @@ with st.sidebar:
     if st.button("🔍 Поиск по истории", use_container_width=True):
         st.switch_page("pages/7_🔍_Поиск_по_истории.py")
 
+    if user and user['role'] == 'admin':
+        if st.button("📋 Журнал действий", use_container_width=True):
+            st.switch_page("pages/admin_logs.py")
+
     st.markdown("---")
     st.markdown("### 📊 Статистика сессии")
 
@@ -1050,12 +1063,16 @@ with st.sidebar:
     st.markdown("### 🗑️ Управление историей")
 
     if st.button("🗑️ Очистить всю историю", use_container_width=True):
+        # Логируем очистку истории
+        log_action("clear_history", f"Очищено {len(st.session_state.history)} записей")
         st.session_state.history = clear_history()
         st.success("✅ История очищена!")
         st.rerun()
 
     if len(st.session_state.history) > 0:
         if st.button("📥 Экспорт в CSV", use_container_width=True):
+            # Логируем экспорт CSV
+            log_action("export_csv", f"Экспортировано {len(st.session_state.history)} записей")
             filename = export_history_to_csv(st.session_state.history)
             with open(filename, 'r', encoding='utf-8-sig') as f:
                 st.download_button(

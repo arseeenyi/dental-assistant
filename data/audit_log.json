@@ -1,0 +1,290 @@
+[
+  {
+    "timestamp": "2026-05-09T13:36:07.321696",
+    "user": "admin",
+    "user_name": "Главный врач",
+    "role": "admin",
+    "action": "login",
+    "details": "Успешный вход: admin",
+    "ip": "unknown"
+  },
+  {
+    "timestamp": "2026-05-09T13:36:46.668531",
+    "user": "admin",
+    "user_name": "Главный врач",
+    "role": "admin",
+    "action": "predict",
+    "details": "Пациент: , КПУ: 10.06, Пародонтит: Нет, Рефлюкс: Нет, Фтор: 0.04",
+    "ip": "unknown"
+  },
+  {
+    "timestamp": "2026-05-09T13:37:14.193149",
+    "user": "admin",
+    "user_name": "Главный врач",
+    "role": "admin",
+    "action": "download_pdf",
+    "details": "Пациент: ",
+    "ip": "unknown"
+  },
+  {
+    "timestamp": "2026-05-09T13:38:02.016790",
+    "user": "admin",
+    "user_name": "Главный врач",
+    "role": "admin",
+    "action": "logout",
+    "details": "Выход из системы: admin",
+    "ip": "unknown"
+  },
+  {
+    "timestamp": "2026-05-09T13:38:10.838224",
+    "user": "doctor",
+    "user_name": "Врач-стоматолог",
+    "role": "doctor",
+    "action": "login",
+    "details": "Успешный вход: doctor",
+    "ip": "unknown"
+  },
+  {
+    "timestamp": "2026-05-09T13:38:30.628437",
+    "user": "doctor",
+    "user_name": "Врач-стоматолог",
+    "role": "doctor",
+    "action": "logout",
+    "details": "Выход из системы: doctor",
+    "ip": "unknown"
+  },
+  {
+    "timestamp": "2026-05-09T13:38:39.479413",
+    "user": null,
+    "user_name": null,
+    "role": null,
+    "action": "login_failed",
+    "details": "Неудачная попытка входа: admin123",
+    "ip": "unknown"
+  },
+  {
+    "timestamp": "2026-05-09T13:38:48.399319",
+    "user": "admin",
+    "user_name": "Главный врач",
+    "role": "admin",
+    "action": "login",
+    "details": "Успешный вход: admin",
+    "ip": "unknown"
+  },
+  {
+    "timestamp": "2026-05-09T13:43:47.085310",
+    "user": "unknown",
+    "user_name": "unknown",
+    "role": "unknown",
+    "action": "login_failed",
+    "details": "Неудачная попытка входа: admin",
+    "ip": "unknown"
+  },
+  {
+    "timestamp": "2026-05-09T13:43:49.486359",
+    "user": "admin",
+    "user_name": "Главный врач",
+    "role": "admin",
+    "action": "login",
+    "details": "Успешный вход: admin",
+    "ip": "unknown"
+  },
+  {
+    "timestamp": "2026-05-09T13:44:08.806625",
+    "user": "admin",
+    "user_name": "Главный врач",
+    "role": "admin",
+    "action": "logout",
+    "details": "Выход из системы: admin",
+    "ip": "unknown"
+  },
+  {
+    "timestamp": "2026-05-09T13:44:16.682314",
+    "user": "doctor",
+    "user_name": "Врач-стоматолог",
+    "role": "doctor",
+    "action": "login",
+    "details": "Успешный вход: doctor",
+    "ip": "unknown"
+  },
+  {
+    "timestamp": "2026-05-09T13:44:23.753525",
+    "user": "doctor",
+    "user_name": "Врач-стоматолог",
+    "role": "doctor",
+    "action": "logout",
+    "details": "Выход из системы: doctor",
+    "ip": "unknown"
+  },
+  {
+    "timestamp": "2026-05-09T13:44:32.948060",
+    "user": "admin",
+    "user_name": "Главный врач",
+    "role": "admin",
+    "action": "login",
+    "details": "Успешный вход: admin",
+    "ip": "unknown"
+  },
+  {
+    "timestamp": "2026-05-09T13:44:51.236298",
+    "user": "admin",
+    "user_name": "Главный врач",
+    "role": "admin",
+    "action": "logout",
+    "details": "Выход из системы: admin",
+    "ip": "unknown"
+  },
+  {
+    "timestamp": "2026-05-09T19:33:28.861587",
+    "user": "doctor",
+    "user_name": "Врач-стоматолог",
+    "role": "doctor",
+    "action": "login",
+    "details": "Успешный вход: doctor",
+    "ip": "unknown"
+  },
+  {
+    "timestamp": "2026-05-09T19:33:55.145179",
+    "user": "doctor",
+    "user_name": "Врач-стоматолог",
+    "role": "doctor",
+    "action": "logout",
+    "details": "Выход из системы: doctor",
+    "ip": "unknown"
+  },
+  {
+    "timestamp": "2026-05-09T19:34:03.525502",
+    "user": "doctor",
+    "user_name": "Врач-стоматолог",
+    "role": "doctor",
+    "action": "login",
+    "details": "Успешный вход: doctor",
+    "ip": "unknown"
+  },
+  {
+    "timestamp": "2026-05-09T19:34:13.817724",
+    "user": "doctor",
+    "user_name": "Врач-стоматолог",
+    "role": "doctor",
+    "action": "logout",
+    "details": "Выход из системы: doctor",
+    "ip": "unknown"
+  },
+  {
+    "timestamp": "2026-05-09T19:34:20.890991",
+    "user": "admin",
+    "user_name": "Главный врач",
+    "role": "admin",
+    "action": "login",
+    "details": "Успешный вход: admin",
+    "ip": "unknown"
+  },
+  {
+    "timestamp": "2026-05-09T19:34:56.465867",
+    "user": "admin",
+    "user_name": "Главный врач",
+    "role": "admin",
+    "action": "clear_history",
+    "details": "Очищено 34 записей",
+    "ip": "unknown"
+  },
+  {
+    "timestamp": "2026-05-09T19:35:56.374247",
+    "user": "admin",
+    "user_name": "Главный врач",
+    "role": "admin",
+    "action": "predict",
+    "details": "Пациент: Сергеев Иван, КПУ: 8.45, Пародонтит: Нет, Рефлюкс: Есть риск, Фтор: 0.0",
+    "ip": "unknown"
+  },
+  {
+    "timestamp": "2026-05-09T19:36:34.164470",
+    "user": "admin",
+    "user_name": "Главный врач",
+    "role": "admin",
+    "action": "predict",
+    "details": "Пациент: Сергеев Иван, КПУ: 7.42, Пародонтит: Нет, Рефлюкс: Есть риск, Фтор: 0.07",
+    "ip": "unknown"
+  },
+  {
+    "timestamp": "2026-05-09T19:37:01.425942",
+    "user": "admin",
+    "user_name": "Главный врач",
+    "role": "admin",
+    "action": "predict",
+    "details": "Пациент: Сергеев Иван, КПУ: 8.32, Пародонтит: Нет, Рефлюкс: Есть риск, Фтор: 0.19",
+    "ip": "unknown"
+  },
+  {
+    "timestamp": "2026-05-09T19:37:22.551917",
+    "user": "admin",
+    "user_name": "Главный врач",
+    "role": "admin",
+    "action": "predict",
+    "details": "Пациент: Сергеев Иван, КПУ: 6.78, Пародонтит: Нет, Рефлюкс: Есть риск, Фтор: 0.24",
+    "ip": "unknown"
+  },
+  {
+    "timestamp": "2026-05-09T19:37:49.602902",
+    "user": "admin",
+    "user_name": "Главный врач",
+    "role": "admin",
+    "action": "predict",
+    "details": "Пациент: Сергеев Иван, КПУ: 6.96, Пародонтит: Нет, Рефлюкс: Есть риск, Фтор: 0.24",
+    "ip": "unknown"
+  },
+  {
+    "timestamp": "2026-05-09T19:38:00.740430",
+    "user": "admin",
+    "user_name": "Главный врач",
+    "role": "admin",
+    "action": "predict",
+    "details": "Пациент: Сергеев Иван, КПУ: 6.96, Пародонтит: Нет, Рефлюкс: Есть риск, Фтор: 0.24",
+    "ip": "unknown"
+  },
+  {
+    "timestamp": "2026-05-09T19:38:10.967548",
+    "user": "admin",
+    "user_name": "Главный врач",
+    "role": "admin",
+    "action": "predict",
+    "details": "Пациент: Сергеев Иван, КПУ: 6.96, Пародонтит: Нет, Рефлюкс: Нет, Фтор: 0.24",
+    "ip": "unknown"
+  },
+  {
+    "timestamp": "2026-05-09T19:39:03.461722",
+    "user": "admin",
+    "user_name": "Главный врач",
+    "role": "admin",
+    "action": "predict",
+    "details": "Пациент: Сергеев Иван, КПУ: 6.96, Пародонтит: Нет, Рефлюкс: Нет, Фтор: 0.24",
+    "ip": "unknown"
+  },
+  {
+    "timestamp": "2026-05-09T19:39:14.466550",
+    "user": "admin",
+    "user_name": "Главный врач",
+    "role": "admin",
+    "action": "predict",
+    "details": "Пациент: Сергеев Иван, КПУ: 6.86, Пародонтит: Нет, Рефлюкс: Нет, Фтор: 0.25",
+    "ip": "unknown"
+  },
+  {
+    "timestamp": "2026-05-09T19:39:37.480683",
+    "user": "admin",
+    "user_name": "Главный врач",
+    "role": "admin",
+    "action": "clear_history",
+    "details": "Очищено 9 записей",
+    "ip": "unknown"
+  },
+  {
+    "timestamp": "2026-05-09T19:41:01.974749",
+    "user": "admin",
+    "user_name": "Главный врач",
+    "role": "admin",
+    "action": "predict",
+    "details": "Пациент: Сергеев Иван, КПУ: 8.74, Пародонтит: Нет, Рефлюкс: Нет, Фтор: 0.25",
+    "ip": "unknown"
+  }
+]

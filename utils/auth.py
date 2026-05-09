@@ -7,6 +7,7 @@ import json
 import os
 import streamlit as st
 from datetime import datetime
+from utils.audit import log_action
 
 # Файл с пользователями
 USERS_FILE = "data/users.json"
@@ -78,12 +79,17 @@ def login(username: str, password: str) -> bool:
         st.session_state.full_name = user["full_name"]
         st.session_state.role = user["role"]
         st.session_state.login_time = datetime.now().isoformat()
+        log_action("login", f"Успешный вход: {username}")
         return True
-    return False
+    else:
+        log_action("login_failed", f"Неудачная попытка входа: {username}")
+        return False
 
 
 def logout():
     """Выход из системы"""
+    username = st.session_state.get('username', 'unknown')
+    log_action("logout", f"Выход из системы: {username}")
     st.session_state.authenticated = False
     st.session_state.username = None
     st.session_state.full_name = None
