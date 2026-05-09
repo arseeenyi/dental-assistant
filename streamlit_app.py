@@ -20,6 +20,7 @@ from utils.recommendations import generate_recommendations
 from utils.history_manager import load_history, save_history, add_prediction, clear_history, export_history_to_csv
 from utils.pdf_generator import generate_pdf_report
 from utils.hints import get_tooltip, get_norm_text
+from utils.auth import is_authenticated, get_current_user, logout, require_auth
 
 
 # ============================================
@@ -374,6 +375,10 @@ def load_predictor():
 predictor = load_predictor()
 
 if predictor is None:
+    st.stop()
+
+if not is_authenticated():
+    st.switch_page("pages/login.py")
     st.stop()
 
 
@@ -839,7 +844,7 @@ if st.session_state.current_results:
             <div class="card-icon">🦷</div>
             <h3 style="margin: 0;">Пародонтит</h3>
             <div class="metric-value {risk_class_paro}">{risk_text_paro}</div>
-            <p style="margin: 5px 0 0 0;">Уверенность модели: {confidence_paro:.0f}%</p>
+            <p style="margin: 5px 0 0 0;">Уверенность modelo: {confidence_paro:.0f}%</p>
             <p class="{conf_class_paro}" style="margin: 0;">({conf_text_paro})</p>
         </div>
         """, unsafe_allow_html=True)
@@ -965,6 +970,23 @@ if st.session_state.current_results:
 # ============================================
 
 with st.sidebar:
+    # ========== ИНФОРМАЦИЯ О ПОЛЬЗОВАТЕЛЕ ==========
+    user = get_current_user()
+    if user:
+        st.markdown(f"""
+        <div style="background-color: #e8f4fd; padding: 0.75rem; border-radius: 10px; margin-bottom: 1rem;">
+            <b>👤 {user['full_name']}</b><br>
+            <span style="font-size: 0.8rem;">Роль: {user['role']}</span>
+        </div>
+        """, unsafe_allow_html=True)
+
+        if st.button("🚪 Выйти", use_container_width=True):
+            logout()
+            st.rerun()
+
+        st.markdown("---")
+    # ========== КОНЕЦ БЛОКА ==========
+
     # ========== ПРЕДУПРЕЖДЕНИЕ О БЕЗОПАСНОСТИ ==========
     from utils.security import add_security_notice
 

@@ -1,0 +1,14 @@
+{
+  "doctor": {
+    "password_hash": "f348d5628621f3d8f59c8cabda0f8eb0aa7e0514a90be7571020b1336f26c113",
+    "full_name": "Врач-стоматолог",
+    "role": "doctor",
+    "created_at": "2026-05-05T15:02:39.736037"
+  },
+  "admin": {
+    "password_hash": "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9",
+    "full_name": "Главный врач",
+    "role": "admin",
+    "created_at": "2026-05-05T15:02:39.736064"
+  }
+}
