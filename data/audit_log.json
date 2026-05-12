@@ -286,5 +286,122 @@
     "action": "predict",
     "details": "Пациент: Сергеев Иван, КПУ: 8.74, Пародонтит: Нет, Рефлюкс: Нет, Фтор: 0.25",
     "ip": "unknown"
+  },
+  {
+    "timestamp": "2026-05-09T20:25:24.314565",
+    "user": "admin",
+    "user_name": "Главный врач",
+    "role": "admin",
+    "action": "login",
+    "details": "Успешный вход: admin",
+    "ip": "unknown"
+  },
+  {
+    "timestamp": "2026-05-09T20:25:58.432083",
+    "user": "admin",
+    "user_name": "Главный врач",
+    "role": "admin",
+    "action": "predict",
+    "details": "Пациент: Мельников Дмитрий, КПУ: 10.06, Пародонтит: Нет, Рефлюкс: Нет, Фтор: 0.13",
+    "ip": "unknown"
+  },
+  {
+    "timestamp": "2026-05-09T20:26:43.861887",
+    "user": "admin",
+    "user_name": "Главный врач",
+    "role": "admin",
+    "action": "predict",
+    "details": "Пациент: Ивашко Мария, КПУ: 13.63, Пародонтит: Нет, Рефлюкс: Есть риск, Фтор: 0.23",
+    "ip": "unknown"
+  },
+  {
+    "timestamp": "2026-05-09T20:27:31.084473",
+    "user": "admin",
+    "user_name": "Главный врач",
+    "role": "admin",
+    "action": "predict",
+    "details": "Пациент: Карабанько Глеб, КПУ: 14.72, Пародонтит: Нет, Рефлюкс: Есть риск, Фтор: 0.24",
+    "ip": "unknown"
+  },
+  {
+    "timestamp": "2026-05-09T20:27:59.688016",
+    "user": "admin",
+    "user_name": "Главный врач",
+    "role": "admin",
+    "action": "predict",
+    "details": "Пациент: Иванов Иван, КПУ: 14.72, Пародонтит: Нет, Рефлюкс: Есть риск, Фтор: 0.25",
+    "ip": "unknown"
+  },
+  {
+    "timestamp": "2026-05-09T20:29:03.775906",
+    "user": "admin",
+    "user_name": "Главный врач",
+    "role": "admin",
+    "action": "predict",
+    "details": "Пациент: Дорн Иван, КПУ: 11.89, Пародонтит: Нет, Рефлюкс: Нет, Фтор: 0.24",
+    "ip": "unknown"
+  },
+  {
+    "timestamp": "2026-05-09T20:34:18.360182",
+    "user": "admin",
+    "user_name": "Главный врач",
+    "role": "admin",
+    "action": "login",
+    "details": "Успешный вход: admin",
+    "ip": "unknown"
+  },
+  {
+    "timestamp": "2026-05-09T20:43:19.190678",
+    "user": "admin",
+    "user_name": "Главный врач",
+    "role": "admin",
+    "action": "login",
+    "details": "Успешный вход: admin",
+    "ip": "unknown"
+  },
+  {
+    "timestamp": "2026-05-09T20:46:54.687375",
+    "user": "admin",
+    "user_name": "Главный врач",
+    "role": "admin",
+    "action": "logout",
+    "details": "Выход из системы: admin",
+    "ip": "unknown"
+  },
+  {
+    "timestamp": "2026-05-12T13:46:49.144975",
+    "user": "admin",
+    "user_name": "Главный врач",
+    "role": "admin",
+    "action": "login",
+    "details": "Успешный вход: admin",
+    "ip": "unknown"
+  },
+  {
+    "timestamp": "2026-05-12T13:51:56.829987",
+    "user": "admin",
+    "user_name": "Главный врач",
+    "role": "admin",
+    "action": "logout",
+    "details": "Выход из системы: admin",
+    "ip": "unknown"
+  },
+  {
+    "timestamp": "2026-05-12T13:52:08.086722",
+    "user": "doctor",
+    "user_name": "Врач-стоматолог",
+    "role": "doctor",
+    "action": "login",
+    "details": "Успешный вход: doctor",
+    "ip": "unknown"
+  },
+  {
+    "timestamp": "2026-05-12T13:52:41.041153",
+    "user": "doctor",
+    "user_name": "Врач-стоматолог",
+    "role": "doctor",
+    "action": "logout",
+    "details": "Выход из системы: doctor",
+    "ip": "unknown"
   }
 ]

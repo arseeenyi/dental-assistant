@@ -1046,6 +1046,9 @@ with st.sidebar:
         if st.button("📋 Журнал действий", use_container_width=True):
             st.switch_page("pages/admin_logs.py")
 
+    if st.button("🗺️ Карта рисков", use_container_width=True):
+        st.switch_page("pages/8_🗺️_Карта_рисков.py")
+
     st.markdown("---")
     st.markdown("### 📊 Статистика сессии")
 
